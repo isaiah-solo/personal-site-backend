@@ -4,7 +4,7 @@ const express = require('express');
 const MongoClient = mongodb.MongoClient;
 const app = express();
 
-const url = "mongodb://localhost:27017/";
+const url = "app-database";
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
