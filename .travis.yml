@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+- 8
+cache:
+  directories:
+  - node_modules
+env:
+  global:
+  - secure: SE/SANgUrb4SREC8NxGyrVsXCcfxFyciMAi9Ezaj2+K1EsuaquHjCbLqpCVxrGFrOuD7Y/BS9VxbW8skk1hraqMh+dKpk8AtJWjwCPhVDPJtAHWO+kC9AinDWHDUAKExuPlgSa/LpqCzNmAmMuKn1uAtFKmWFdQsgAQQRX/+sYggQxirn32mHNC5HG/fWgbezxH4wzkATY6KAJG7aZZRWk28yCVsVLQlfwGdHqse3MBawny+QfdBXi3KTwm1kWiF3uSfI6rxTXquGuAbd+D8rt0MM1bRky5T2jsDBrJp6UPoraHTQWB9NRo7SOsIG3bc44EpWIaIp31W3no4z9B/Pd8l+1m7jYnKHDWQLz4qAL0xdsR0arv5hlhwqAnSOmKmXQJd8mk5SI46C1YQC2MLYNWvBiFRqlTTFdofZt0HzxrP9Jf+hM4m4DPsERIjwZ5UonBIRfGSRwRgqucnVjRSHHW1RR/Gh+afgxYq6u03dG7O8gyvrtMpba1pU4jarwzu2lzgoACvnqKL6jSHOzc5NIVFqna1wdypF6h+BtAxGcuPkN+67oqzPiArrqhIoOyYMAvMUQ/WuCNKH1e3bATJ22RbuW/Inz9M6kI5mXj4ocRP8Qb1wgRBT6/Gg6+sfNCafMVyqMzdAm5MF0Yp0oJDwW5wEgCX6mvUYJVoZQSqiqE=
+  - secure: XJjkeLZjcQKbtAXXnmnX0/8Va7I+R08uZS9+9kC/V51Bf+qfIHuPpwUmQwahi2yvbAgQQXFHDZ22fnsLaSCNr1QUCmSCR4a/bjyyGKYbF0F9dbXabGDJqyOWNXBDjZWQeY5JFG6//skUckHurQl8NUBsZxk0IB3drJhdo44maOPHzeyBeNft30V7E4n0bnbxc+FWkfxxpgX9G56Mjq+59mwh6ev2731XwmyveHFAuWGVU282V3YeR6gaQXkdxf5/DwzH6vNAkzmfRpcIOk6AU9DssB2EMSFnWZXhfWbljQo0bmnEGDzCelDR3cQLdkHN747/cFiH9VXj5lHhiRKcDnq12XXNrlyNUT5Mf69zUIsctCbWV9HRW21I6K1SB79DcelQtfLqlr/FbNeEmZiFnBUewJlhUl9/CqVa72ZUC/besu+YLe60DHQTbz4REde2j52hIc+plo0BNYdz88Yxe0HwHjsigZrF9r2LpT++9S9eQSq8jYoxK3JR5GdntIU+ECza8r5Nvxmc/diPGgpM3IJ0Kofcb9ldIhhUgey5AEketw1lORTu9LLsfUFuFi5eqo2mqqj5y7ThW5Q2m95EsulaEMMLlqKUQap4Slxji4p5lXbcf4BV+EYq01kzmnyrByh+N6kMQeLVsICdvxB7ldTzawzeAX9UCahEhr7DViA=
+  - secure: Jfm+BEbXKQUrypsrTpJKMZFftDqpeg8KDvB0G9CwwZG5lf6aveTFWf9d8kkkFWsqmpCjpTd6ICCALRgBWGAaJzywMRgRUwbRSybnpxTKNWlxh2vWrcEioinfGYgGn/xwt3FxmwEn/9k+Lcd0KBluYWBMupr6e8PTQko8qhKQpIpNUk0VkYrL0+ND+qqNwyKvtU4mRJAfD46CxolxbE3QF8PqmoapFA2Nv0WspspmoKEAEHt5ImTszvEF6g2DbPLWJ4pBRybXRS84uMhJnA7q+cLxS7Ml76D+zYK8Xnh3ntLSJQyCIi4mtyVzL2lJ0QhlheOiMnvgmKTtw1rHTpPB7ZIl2yIGOJypFepPXw8vt9ltZjECYmNpagEJ8A3Baq3E+9JtQ0YMx7JOyG+VKJA2JS4eflq8fe8OUJKL4Xy9mfBzg26clkYqAHvg6/qSWChVtGXm5KLANmblY1Bj+Gjh+bf0Kpa26/xaQSCe2z3QFB8ehNVdHIj1E/46TLkhlMdRAs4GFrqDSrnsxET1CY+/FCyv6JB6EYbL+iRzcVrxaV/1VDu3h17Lc3EvUzUZY8C1xPFmrrvXQlyVG/uy6axXecAcmP9cASrrGeSI5CTDMQTuO1gx5qKOKc7W4Belr/Ccp8xuzPVx5QmEYK8nan9aszkwx5VQEzq7U7gSBGfYy2c=
+  - COMMIT=${TRAVIS_COMMIT::8}
+script:
+after_success:
+- docker login -u $DOCKER_USER -p $DOCKER_PASS
+- export REPO=isaiahsolo/personal-site-frontend
+- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+- docker build -f Dockerfile -t $REPO:$COMMIT .
+- docker tag $REPO:$COMMIT $REPO:$TAG
+- docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+- docker push $REPO
