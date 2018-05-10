@@ -22,11 +22,13 @@ app.get('/api/site', (req, res) => {
 
     db.collection("site").findOne({}, function(err, document) {
       if (err) throw err;
-      res.send({
-        profile: document.profile,
-        experience: document.experience,
-        skills: document.skills,
-      });
+      if (document) {
+        res.send({
+          profile: document.profile,
+          experience: document.experience,
+          skills: document.skills,
+        });
+      }
       db.close();
     });
   });
