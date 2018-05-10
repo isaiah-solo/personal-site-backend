@@ -29,7 +29,7 @@ app.get('/api/site', (req, res) => {
           skills: document.skills,
         });
       }
-      db.close();
+      client.close();
     });
   });
 });
