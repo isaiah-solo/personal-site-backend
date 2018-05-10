@@ -12,14 +12,14 @@ app.use((req, res, next) => {
   next();
 });
 
-MongoClient.connect(url, (err, client) => {
-  if (err) {
-    return console.log(err.name + ': ' + err.message);
-  }
+app.get('/api/site', (req, res) => {
+  MongoClient.connect(url, (err, client) => {
+    if (err) {
+      return console.log(err.name + ': ' + err.message);
+    }
 
-  var db = client.db("main");
+    var db = client.db("main");
 
-  app.get('/api/site', (req, res) => {
     db.collection("site").findOne({}, function(err, document) {
       if (err) throw err;
       res.send({
@@ -27,10 +27,12 @@ MongoClient.connect(url, (err, client) => {
         experience: document.experience,
         skills: document.skills,
       });
+      db.close();
     });
   });
-
-  app.listen(8081, () => {
-    console.log('Listening on port 8081...');
-  });
 });
+
+app.listen(8081, () => {
+  console.log('Listening on port 8081...');
+});
+
