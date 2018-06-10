@@ -12,25 +12,47 @@ app.use((req, res, next) => {
   next();
 });
 
-MongoClient.connect(url, (err, client) => {
-  if (err) {
-    return console.log(err.name + ': ' + err.message);
-  }
+app.get('/api/static/profile', (req, res) => {
+  MongoClient.connect(url, (err, client) => {
+    if (err) {
+      return console.log(err.name + ': ' + err.message);
+    }
 
-  var db = client.db("main");
+    var db = client.db("main");
 
-  app.get('/api/site', (req, res) => {
     db.collection("site").findOne({}, function(err, document) {
       if (err) throw err;
-      res.send({
-        profile: document.profile,
-        experience: document.experience,
-        skills: document.skills,
-      });
+      if (document) {
+        res.send({
+          profile: document.profile
+        });
+      }
+      client.close();
     });
   });
+});
 
-  app.listen(8081, () => {
-    console.log('Listening on port 8081...');
+app.get('/api/static/about', (req, res) => {
+  MongoClient.connect(url, (err, client) => {
+    if (err) {
+      return console.log(err.name + ': ' + err.message);
+    }
+
+    var db = client.db("main");
+
+    db.collection("site").findOne({}, function(err, document) {
+      if (err) throw err;
+      if (document) {
+        res.send({
+          about: document.about
+        });
+      }
+      client.close();
+    });
   });
 });
+
+app.listen(8081, () => {
+  console.log('Listening on port 8081...');
+});
+
