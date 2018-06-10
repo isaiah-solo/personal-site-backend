@@ -12,7 +12,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api/site', (req, res) => {
+app.get('/api/static/profile', (req, res) => {
   MongoClient.connect(url, (err, client) => {
     if (err) {
       return console.log(err.name + ': ' + err.message);
@@ -24,9 +24,27 @@ app.get('/api/site', (req, res) => {
       if (err) throw err;
       if (document) {
         res.send({
-          profile: document.profile,
-          experience: document.experience,
-          skills: document.skills,
+          profile: document.profile
+        });
+      }
+      client.close();
+    });
+  });
+});
+
+app.get('/api/static/about', (req, res) => {
+  MongoClient.connect(url, (err, client) => {
+    if (err) {
+      return console.log(err.name + ': ' + err.message);
+    }
+
+    var db = client.db("main");
+
+    db.collection("site").findOne({}, function(err, document) {
+      if (err) throw err;
+      if (document) {
+        res.send({
+          about: document.about
         });
       }
       client.close();
