@@ -2,15 +2,14 @@ const express = require('express');
 const mysql = require('mysql');
 
 const app = express();
-const pool = mysql.createPool(
-  {
-    connectionLimit: 20,
-    database: 'site',
-    host: 'localhost',
-    password: 'admin',
-    user: 'root',
-  }
-);
+
+const poolConfig = {
+  connectionLimit: 20,
+  database: 'site',
+  host: 'localhost',
+  password: 'admin',
+  user: 'root',
+};
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -19,6 +18,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/api/static/profile', (req, res) => {
+  const pool = mysql.createPool(poolConfig);
   pool.query('select * from profile', (error, rows) => {
     if (error) {
       throw error;
@@ -43,13 +43,13 @@ app.get('/api/static/profile', (req, res) => {
             name,
           }
         });
-        pool.release();
       }
     );
   });
 });
 
 app.get('/api/static/about', (req, res) => {
+  const pool = mysql.createPool(poolConfig);
   pool.query(
     'select j.company as company, j.end_date as endDate, j.id as id, j.position as position, j.start_date as startDate, j.website as website, s.label as skillLabel, s.link as skillLink, jd.text as detailText from job j, job_to_skill js, skill s, job_detail jd where j.id = js.job_id and s.id = js.skill_id and j.id = jd.job_id',
     (error, rows) => {
@@ -115,7 +115,6 @@ app.get('/api/static/about', (req, res) => {
           )),
         },
       });
-      pool.release();
     }
   );
 });
