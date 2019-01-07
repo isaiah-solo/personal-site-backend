@@ -43,6 +43,7 @@ app.get('/api/static/profile', (req, res) => {
             name,
           }
         });
+        pool.release();
       }
     );
   });
@@ -114,6 +115,7 @@ app.get('/api/static/about', (req, res) => {
           )),
         },
       });
+      pool.release();
     }
   );
 });
