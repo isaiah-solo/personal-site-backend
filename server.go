@@ -5,8 +5,10 @@ import (
   "database/sql"
   "encoding/json"
   "fmt"
+  "github.com/gorilla/mux"
   "net/http"
   "reflect"
+  "time"
 )
 
 type NullInt sql.NullInt64
@@ -99,6 +101,7 @@ func performQuery(db *sql.DB, query string, args ...interface{}) *sql.Rows {
 
 func handleAbout(w http.ResponseWriter, r *http.Request) {
   db := establishConnection()
+  defer db.Close()
   rows := performQuery(
     db,
     "SELECT company, end_date, id, position, start_date, website FROM job",
@@ -176,11 +179,11 @@ func handleAbout(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   w.WriteHeader(http.StatusCreated)
   w.Write([]byte(response))
-  db.Close()
 }
 
 func handleProfile(w http.ResponseWriter, r *http.Request) {
   db := establishConnection()
+  defer db.Close()
   rows := performQuery(
     db,
     "SELECT headline, id, name FROM profile",
@@ -223,13 +226,21 @@ func handleProfile(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   w.WriteHeader(http.StatusCreated)
   w.Write([]byte(response))
-  db.Close()
 }
 
 func main() {
-  http.HandleFunc("/api/static/about", handleAbout)
-  http.HandleFunc("/api/static/profile", handleProfile)
-  if err := http.ListenAndServe(":8081", nil); err != nil {
+  r := mux.NewRouter()
+  r.HandleFunc("/api/static/about", handleAbout).
+    Methods("GET")
+  r.HandleFunc("/api/static/profile", handleProfile).
+    Methods("GET")
+  srv := &http.Server{
+    Addr:  "127.0.0.1:8081",
+    Handler:  r,
+    ReadTimeout:  15 * time.Second,
+    WriteTimeout:  15 * time.Second,
+  }
+  if err := srv.ListenAndServe(); err != nil {
     panic(err)
   }
 }
