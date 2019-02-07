@@ -1,9 +1,6 @@
-language: node_js
-node_js:
-- 8
-cache:
-  directories:
-  - node_modules
+language: go
+go:
+- 1.8
 env:
   global:
   - secure: vCmILWuQgMJKec2TYXPrxw/ChXrI3QAqVdMBvldCtVT9cXqniiSMcIVVQicwQGPG/2RLF3mPH5L+4U895/Z+OTNXW7Ie11XjhNeZcvnHDEQGlBmXAayqL4ODRnb/+8G4zsPuvq1C9d3U3RR65NIJx3cR+I9DNPBaxSTL8eRW1UXifFbAs10eAVgnBQows/i6VZ8T75L3iqjoLt9Vy5G5vp1qM3U+k/qffX/Lxm4Edmx1uP99PoN+JfmYAcLeeJSBk+gX3S32hXwdhbaNDupxSS0KdgIffs8JXRPC+Xky5IcN1c5n9mJemF3XTgmljpcpBuZFwp3ugymT9gGwQja8P+tyPXIzO/0JCybr2agzwcMMHaFJHRz+5Wf4QeIspLsocm4RTspJ0Lsz2ykM7DiJfvUbVDYeBUHMWNskMOz/Ftoy1uqp2zeVBGqJIf0sAmC+F0FPJ3ugDF+iDHUv/LJ3H1upIWhHYu6/T407i9N86whymyV35rJPgCEaJVc7KwSxlcZWD1uxCD8dFgTsMS9f2x98gHJrrFC0yn7l6YIzv0cZPujV8pdOjRY1Hb0H/hfzGVg4fsn4a/mbwFyj7weroYToOhjr2TwaiENoDjqBU/5hJCfL3T6yLM61DfCUvrCwzCUOU7dZmrlVxId07X6wKcy+g5zBlDS2tFRbcBJfy4I=
