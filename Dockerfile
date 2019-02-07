@@ -1,9 +1,10 @@
-FROM node:carbon as builder
+FROM golang:1.8 as builder
 WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm install
 COPY . .
 
+RUN go get -d -v ./...
+RUN go build -o server .
+
 EXPOSE 80
-CMD ["node", "server.js"]
+CMD ["./server"]
 
